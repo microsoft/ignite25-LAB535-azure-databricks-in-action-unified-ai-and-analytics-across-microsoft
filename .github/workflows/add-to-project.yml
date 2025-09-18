@@ -1,0 +1,39 @@
+name: Add to Project
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  add-to-project:
+    name: Add issue to Ignite project
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'microsoft'
+    steps:
+      - name: Add to project
+        uses: actions/add-to-project@v1.0.2
+        with:
+          # Update this project URL to match the actual Ignite GitHub Project
+          project-url: ${{ vars.IGNITE_PROJECT_URL || 'https://github.com/orgs/microsoft/projects/IGNITE_PROJECT_NUMBER' }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  label_issues:
+    name: Label new issues
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'microsoft'
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - name: Label issue with Ignite labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Add standard labels for Ignite 2025 issues
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['ignite-2025', 'needs-triage']
+            });
