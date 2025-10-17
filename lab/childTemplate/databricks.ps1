@@ -297,5 +297,9 @@ foreach ($file in $files) {
 }
 Set-Location ../../
 
+$tenantId = (Get-AzContext).Tenant.Id
+azcopy login --tenant-id $tenantId
+azcopy copy "https://stignite25.blob.core.windows.net/volume/*" "C:\Downloads" --recursive --overwrite=prompt
+
 ###Azure Databricks End here##
 
