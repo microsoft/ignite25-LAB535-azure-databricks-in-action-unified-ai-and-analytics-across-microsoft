@@ -36,7 +36,6 @@ THIS DEMO/LAB PROVIDES CERTAIN SOFTWARE TECHNOLOGY/PRODUCT FEATURES AND FUNCTION
 ## Exercise 1: Lakehouse Setup & Data Orchestration with Azure Databricks and Lakeflow declarative pipelines
 
  - Task 1: Set Up Azure Databricks Environment and load data into Unity Catalog from ADLS
-   - Configure storage access and permissions
  - Task 2: Create ETL pipeline for Data Transformation
  - Task 3: Generate column-level insights with AI Suggested Descriptions, then explore data lineage, table update history, and profiling in Azure Databricks.
 
@@ -46,7 +45,7 @@ THIS DEMO/LAB PROVIDES CERTAIN SOFTWARE TECHNOLOGY/PRODUCT FEATURES AND FUNCTION
     - Design an assistant that can respond to business queries using curated datasets
     <!-- - Implement using Databricks notebooks or dashboards -->
  
-- Task 2.2: Connect AI/BI Genie inside AI Foundry and Interact with It
+- Task 2.2: Connect AI/BI Genie inside AI Foundry.
     - Use Azure AI Foundry to create a connection to Databricks AI/BI Genie using the native connector
     <!-- - Interact with Genie through AI Foundry agents to query data and receive contextual responses -->
 
@@ -59,9 +58,7 @@ THIS DEMO/LAB PROVIDES CERTAIN SOFTWARE TECHNOLOGY/PRODUCT FEATURES AND FUNCTION
     - Setup: Create Microsoft Fabric Workspace
     <!-- - Select a Delta table from Databricks Unity Catalog -->
     -  Create Fabric’s mirrored catalog in Fabric
- - Task 3.2: Query Unity Catalog Data Using SQL
-    - Use T-SQL or Spark SQL in Fabric to explore mirrored data
-    - Create a semantic model in Direct Lake mode and use Power BI to visualize and generate insights
+ - Task 3.2: Create a semantic model in Direct Lake mode and use Power BI to visualize and generate insights
 
 ## Exercise 4: Copilot Studio for Low-Code Automation
 
@@ -79,6 +76,189 @@ THIS DEMO/LAB PROVIDES CERTAIN SOFTWARE TECHNOLOGY/PRODUCT FEATURES AND FUNCTION
  - Task 5.2: Add AI Visuals to Explain Key Drivers
     - Use Key Influencers to identify factors impacting sales
     - Add Smart Narrative to auto-generate insights and summaries -->
+
+## Exercise 1: Lakehouse Setup & Data Orchestration with Azure Databricks and Lakeflow declarative pipelines
+
+### Task 1: Set Up Azure Databricks Environment and load data into Unity Catalog from ADLS
+
+1. After running the script to create the required resources, navigate to the resource group you created.
+
+![Task-2.3_1.png](./media/ex1t1i1.png)
+
+2. Select the Databricks workspace you created and launch it.
+
+![Task-2.3_1.png](./media/ex1t1i2.png)
+
+3. On the Databricks workspace page, select the **Catalog**, click on **zava_unity_catalog**, and then choose **Create Schema**.
+
+![Task-2.3_1.png](./media/ex1t1i3.png)
+
+4. Enter a schema name with a unique suffix and click on **Create**.
+
+![Task-2.3_1.png](./media/ex1t1i4.png)
+
+5. After creating the schema, create a volume by clicking the **Create** button and then selecting **Volume**.
+
+![Task-2.3_1.png](./media/ex1t1i5.png)
+
+6. Enter a volume name as **fraud_raw_data** and click on **Create**.
+
+![Task-2.3_1.png](./media/ex1t1i61.png)
+
+7. On the newly created volume, click **Upload to this Volume** to upload the required files.
+
+![Task-2.3_1.png](./media/ex1t1i71.png)
+
+8. In the Upload Files to Volume window, select the **Browse** option.
+
+![Task-2.3_1.png](./media/ex1t1i8.png)
+
+9. Select the files you want to upload, click **Open**, and then choose the **Upload** option to complete the upload.
+
+![Task-2.3_1.png](./media/ex1t1i9.png)
+
+10. From the left navigation, select **Workspace**, expand Workspace **Repos**, choose **Analytics with ADB**, and open **01.1-DLT-fraud-detection-SQL**.
+
+![Task-2.3_1.png](./media/ex1t1i10.png)
+
+11. Press **Ctrl + F** to search for **#schemaName#**, and replace it with the schema name you created earlier.
+
+![Task-2.3_1.png](./media/ex1t1i11.png)
+
+12. From the left navigation pane, select **Jobs & Pipelines**, then choose **ETL Pipeline**.
+
+![Task-2.3_1.png](./media/ex1t1i12.png)
+
+13. From the dropdown list, select **zava_unity_catalog**.
+
+![Task-2.3_1.png](./media/ex1t1i19.png)
+
+14. From the Schema dropdown list, select the schema you created in the previous steps.
+
+![Task-2.3_1.png](./media/ex1t1i20.png)
+
+13. On the New Pipeline page, select **Add Existing Assets**.
+
+![Task-2.3_1.png](./media/ex1t1i13.png)
+
+14. In the pipeline root folder, choose the **Analytics with ADB** folder and click **Select**.
+
+![Task-2.3_1.png](./media/ex1t1i14.png)
+
+15. In the Source Code Path, select the **01.1-DLT-fraud-detection-SQL** notebook from the **Analytics with ADB** folder, and then click **Select**.
+
+![Task-2.3_1.png](./media/ex1t1i15.png)
+
+16. After adding the **pipeline root folder** and **source code path**, review the details and click **Add**.
+
+![Task-2.3_1.png](./media/ex1t1i18.png)
+
+17. After adding, click **Run Pipeline** from the top-right corner to execute the pipeline.
+
+![Task-2.3_1.png](./media/ex1t1i211.png)
+
+
+18. Navigate to the tables you created under your schema in the Databricks workspace, and click on **AI Generate** to automatically generate comments for the table columns.
+
+![Task-2.3_1.png](./media/ex1t3i1.png)
+
+19. Review the AI-generated comments for the columns, then click **Save All** to apply the changes.
+
+ ![Task-2.3_1.png](./media/ex1t3i2.png)  
+
+20. To view the lineage, select the **Lineage** tab and review the details in that section. Additionally, click on **See Lineage Graph** to view a visual representation of the data flow.
+
+![Task-2.3_1.png](./media/ex1t3i3.png) 
+
+21. Select the **History** tab to view the update history of the table.
+
+![Task-2.3_1.png](./media/ex1t3i4.png) 
+
+
+
+
+## Exercise 2: AI-Driven Insights with Azure AI Foundry & Genie
+
+### Task 2.1: Create a Databricks Assistant AI/BI Genie
+
+1. In the left menu bar, click on **Genie**.
+
+![databricks](./media/databricks3.png)
+
+2. Click on **+ New**.
+
+![databricks](./media/databricks4.png)
+
+3. Click on **All** and then click on **zava_unity_catalog**.
+
+4. Click on the **schema** you created.
+
+5. Select **gold_transactions**, then click on **Create**.
+
+![databricks](./media/databricks7.png)
+
+6. Click on **New Space** in the top left to edit the name and replace it with **Zava_Genie**.
+
+![databricks](./media/databricks9.png)
+
+7. Paste the below questions and see the response.
+
+```
+Are there any fraud hotspots based on geo-location?
+```
+```
+Show me the top 10 most frequent fraud types in gold_transactions.
+```
+```
+What is the average transaction amount for fraudulent vs non-fraudulent transactions?
+```
+```
+Which countries have the highest number of flagged transactions?
+```
+
+![databricks](./media/genie1.png)
+
+
+### Task 2.2: Connect AI/BI Genie inside AI Foundry.
+
+1. Navigate back to the resource group page and click on **AIhub-....**.
+
+![databricks](./media/aifoundary1.png)
+
+2. Click on **Go to Azure AI Foundary portal**.
+
+![databricks](./media/aifoundary2.png)
+
+3. Scroll down and then click on **Management center**.
+
+![databricks](./media/aifoundary3.png)
+
+4. Click on **Connected resources**, then click on **+ New connection**.
+
+![databricks](./media/aifoundary4.png)
+
+5. Scroll down and click on **Azure Databricks**.
+
+![databricks](./media/aifoundary5.png)
+
+6. Click the dropdown for **Connection Type**, then Select **Genie**.
+
+>**Note**: Please make sure you select the **Resource group** you opened in **step 1**.
+
+![databricks](./media/aifoundary6.png)
+
+7. Click the drop down for **Select Genie space**, choose **Zava_genie**, and then click on **Add connection**.
+
+![databricks](./media/aifoundary7.png)
+
+8. Once it's **Connected**, Click on **close**.
+
+![databricks](./media/aifoundary8.png)
+
+### Task 2.3: Use Agent Created Inside AI Foundry with Custom Web App
+
+
+
 
 
 
@@ -116,11 +296,11 @@ Mirroring the Azure Databricks Catalog structure in Fabric allows seamless acces
 
 ![Task-2.3_7.1.png](./media/Task-2.3_7.1.png)
 
-9. In the **Choose data** screen, select the Catalog name as **litware_unity_catalog** from the dropdown box, and select the **rag** schema if not selected, then select the checkbox **Automatically sync future catalog changes for the selected schema** (to mirror future tables) if not ticked and click on **Next** button.
+9. In the **Choose data** screen, select the Catalog name as **zava_unity_catalog** from the dropdown box, and select the **  ** schema if not selected, then select the checkbox **Automatically sync future catalog changes for the selected schema** (to mirror future tables) if not ticked and click on **Next** button.
 
 ![Task-2.3_8.png](./media/Task-2.3_8.png)
 
-10. Enter the **Artifact name** for your mirrored Databricks Catalog and click on the **Create** button.
+10. Enter the **Name** for your mirrored Databricks Catalog and click on the **Create** button.
 
 ![Task-2.3_9.png](./media/Task-2.3_9.png)
 
@@ -131,3 +311,22 @@ Mirroring the Azure Databricks Catalog structure in Fabric allows seamless acces
 12. Click on the **View SQL endpoint** button. You can also select the tables to preview data.
 
 ![Task-2.3_10.png](./media/Task-2.3_10.png)
+
+### Task 3.2: Create a semantic model in Direct Lake mode and use Power BI to visualize and generate insights
+
+1. 
+
+![](./media/semantic.png)
+
+2. 
+
+![](./media/semantic1.png)
+
+3. 
+
+![](./media/semantic2.png)
+
+4. 
+
+![](./media/semantic3.png)
+
