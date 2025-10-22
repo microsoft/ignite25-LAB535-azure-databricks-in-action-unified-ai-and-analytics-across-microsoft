@@ -1,82 +1,3 @@
-$yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes", "I accept the license agreement."
-$no = New-Object System.Management.Automation.Host.ChoiceDescription "&No", "I do not accept and wish to stop execution."
-$options = [System.Management.Automation.Host.ChoiceDescription[]]($yes, $no)
-$title = "Agreement"
-$message = "By typing [Y], I hereby confirm that I have read the license ( available at https://github.com/microsoft/Azure-Analytics-and-AI-Engagement/blob/main/license.md ) and disclaimers ( available at https://github.com/microsoft/Azure-Analytics-and-AI-Engagement/blob/main/README.md ) and hereby accept the terms of the license and agree that the terms and conditions set forth therein govern my use of the code made available hereunder. (Type [Y] for Yes or [N] for No and press enter)"
-$result = $host.ui.PromptForChoice($title, $message, $options, 1)
-
-if ($result -eq 1) {
-    Write-Host "Thank you. Please ensure you delete the resources created with template to avoid further cost implications."
-}
-else {
-    function RefreshTokens() {
-        # Copy external blob content
-        $global:powerbitoken = ((az account get-access-token --resource https://analysis.windows.net/powerbi/api) | ConvertFrom-Json).accessToken
-        $global:synapseToken = ((az account get-access-token --resource https://dev.azuresynapse.net) | ConvertFrom-Json).accessToken
-        $global:graphToken = ((az account get-access-token --resource https://graph.microsoft.com) | ConvertFrom-Json).accessToken
-        $global:managementToken = ((az account get-access-token --resource https://management.azure.com) | ConvertFrom-Json).accessToken
-        $global:purviewToken = ((az account get-access-token --resource https://purview.azure.net) | ConvertFrom-Json).accessToken
-        $global:fabric = ((az account get-access-token --resource https://api.fabric.microsoft.com) | ConvertFrom-Json).accessToken
-    }
-
-    function Check-HttpRedirect($uri) {
-        $httpReq = [system.net.HttpWebRequest]::Create($uri)
-        $httpReq.Accept = "text/html, application/xhtml+xml, */*"
-        $httpReq.method = "GET"
-        $httpReq.AllowAutoRedirect = $false;
-
-        # use them all...
-        # [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls11 -bor [System.Net.SecurityProtocolType]::Tls12 -bor [System.Net.SecurityProtocolType]::Ssl3 -bor [System.Net.SecurityProtocolType]::Tls;
-
-        $global:httpCode = -1;
-        $response = "";
-
-        try {
-            $res = $httpReq.GetResponse();
-
-            $statusCode = $res.StatusCode.ToString();
-            $global:httpCode = [int]$res.StatusCode;
-            $cookieC = $res.Cookies;
-            $resHeaders = $res.Headers;
-            $global:rescontentLength = $res.ContentLength;
-            $global:location = $null;
-
-            try {
-                $global:location = $res.Headers["Location"].ToString();
-                return $global:location;
-            }
-            catch {
-            }
-
-            return $null;
-        }
-        catch {
-            $res2 = $_.Exception.InnerException.Response;
-            $global:httpCode = $_.Exception.InnerException.HResult;
-            $global:httperror = $_.exception.message;
-
-            try {
-                $global:location = $res2.Headers["Location"].ToString();
-                return $global:location;
-            }
-            catch {
-            }
-        }
-
-        return $null;
-    }
-
-    function ReplaceTokensInFile($ht, $filePath) {
-        $template = Get-Content -Raw -Path $filePath
-
-        foreach ($paramName in $ht.Keys) {
-            $template = $template.Replace($paramName, $ht[$paramName])
-        }
-
-        return $template;
-    }
-}
-
 
 Write-Host "------------Prerequisites------------"
 Write-Host "-An Azure Account with the ability to create Fabric Workspace."
@@ -160,12 +81,10 @@ else {
 }
 
 $tenantId = (Get-AzContext).Tenant.Id
-& $azCopyCommand login --tenant-id $tenantId
+#& $azCopyCommand login --tenant-id $tenantId
 
 Start-Transcript -Path ./log.txt
 $subscriptionId = (Get-AzContext).Subscription.Id
-$signedinusername = az ad signed-in-user show | ConvertFrom-Json
-$signedinusername = $signedinusername.userPrincipalName
 
 
 [string]$suffix = -join ((48..57) + (97..122) | Get-Random -Count 7 | % { [char]$_ })
@@ -297,9 +216,10 @@ foreach ($file in $files) {
 }
 Set-Location ../../
 
-$tenantId = (Get-AzContext).Tenant.Id
-azcopy login --tenant-id $tenantId
-azcopy copy "https://stignite25.blob.core.windows.net/volume/*" "C:\Downloads" --recursive --overwrite=prompt
-
+#$tenantId = (Get-AzContext).Tenant.Id
+#azcopy login --tenant-id $tenantId
+mkdir C:\Users\LabUser\Desktop\volume
+& $azCopyCommand copy "https://stignite25.blob.core.windows.net/volume/*" "C:\Users\LabUser\Desktop\volume" --recursive --overwrite=prompt
+ 
 ###Azure Databricks End here##
 
