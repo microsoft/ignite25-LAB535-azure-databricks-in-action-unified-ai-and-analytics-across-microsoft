@@ -1,0 +1,1 @@
+[<img width="1280" height="720" alt="Skilling Challenges at Ignite" src="https://github.com/user-attachments/assets/a79e6cd0-2987-4836-9985-0648ce61664f" />](https://aka.ms/ignite25skillingchallenges)
